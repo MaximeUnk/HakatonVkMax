@@ -183,7 +183,7 @@ const WorkGamificationApp = () => {
           />
           <div>
             <p className="text-gray-500 text-lg">С возвращением,</p>
-            <h1 className="text-xl font-bold">Пан Сашов!</h1>
+            <h1 className="text-xl font-bold">Test User</h1>
           </div>
         </div>
 
