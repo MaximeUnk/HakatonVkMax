@@ -37,7 +37,7 @@ const ProfileComponent = () => {
 
   // Mock user data (keep other fields, update points with totalDiamonds)
   const user = {
-    username: "Пан Сашов",
+    username: "User Test",
     level: "Бронза",
     badges: [
       { id: 1, icon: "🏆", name: "Чемпион" },
