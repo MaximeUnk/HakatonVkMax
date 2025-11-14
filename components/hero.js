@@ -4,6 +4,7 @@ import { UserCircle2 } from "lucide-react";
 import Link from "next/link";
 import MeditationActivity from "./MeditationActivity";
 import TakeBreakActivity from "./TakeBreakActivity";
+import WorkSessionActivity from "./WorkSessionActivity";
 import BottomBar from "./BottomBar";
 import { motion } from "framer-motion";
 import Confetti from "react-confetti";
@@ -11,6 +12,7 @@ import Confetti from "react-confetti";
 const WorkGamificationApp = () => {
   const [showMeditation, setShowMeditation] = useState(false);
   const [showTakeBreak, setShowTakeBreak] = useState(false);
+  const [showWorkSession, setShowWorkSession] = useState(false);
   const [totalDiamonds, setTotalDiamonds] = useState(0);
   const [dailyStreak, setDailyStreak] = useState(0);
   const [dailyTasks, setDailyTasks] = useState([]);
@@ -76,11 +78,14 @@ const WorkGamificationApp = () => {
     // Check for ongoing activities and restore them
     const ongoingMeditation = localStorage.getItem("ongoingMeditation");
     const ongoingBreak = localStorage.getItem("ongoingBreak");
+    const ongoingWorkSession = localStorage.getItem("ongoingWorkSession");
 
     if (ongoingMeditation) {
       setShowMeditation(true);
     } else if (ongoingBreak) {
       setShowTakeBreak(true);
+    } else if (ongoingWorkSession) {
+      setShowWorkSession(true);
     }
   }, []);
 
@@ -95,8 +100,8 @@ const WorkGamificationApp = () => {
       updateActivityCount("goals");
       // Implement goal setting functionality
     } else if (activityName === "Начать рабочую сессию") {
+      setShowWorkSession(true);
       updateActivityCount("workSession");
-      // Implement work session functionality
     }
   };
 
@@ -329,6 +334,8 @@ const WorkGamificationApp = () => {
         <MeditationActivity onClose={handleMeditationClose} />
       ) : showTakeBreak ? (
         <TakeBreakActivity onClose={() => setShowTakeBreak(false)} />
+      ) : showWorkSession ? (
+        <WorkSessionActivity onClose={() => setShowWorkSession(false)} />
       ) : (
         <>
           <h2 className="text-2xl font-semibold mb-6 text-center">Повысить продуктивность</h2>

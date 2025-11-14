@@ -1,97 +1,619 @@
-# Neiry Gamification App
+# VK x MAX Productivity App
 
-## Overview
+## Описание
 
-This project is a gamification app developed for Neiry, a Russian Brain-Computer Interface (BCI) company, during a hackathon held from September 20-22. The app aims to enhance user engagement and productivity by incorporating game-like elements into daily tasks and activities.
+Приложение для повышения личной продуктивности через научно обоснованные методики и игровую механику. Разработано для хакатона **VK x MAX** с интеграцией MAX Mini App (WebApp).
 
-## Features
+Проект объединяет:
+- 🎯 **Productivity tools** (Pomodoro, task management)
+- 🧘 **Wellness** (медитация, управление стрессом)
+- 🎮 **Геймификацию** (алмазы 💎, достижения, daily streak)
+- 📱 **MAX Bridge API** (биометрия, защищённое хранилище, haptic feedback)
 
-1. **Work Gamification**
+## Основные возможности
 
-   - Daily tasks management
-   - Progress tracking
-   - Reward system with diamonds
+1. **Геймификация рабочего процесса**
+   - Управление ежедневными задачами
+   - Отслеживание прогресса
+   - Система наград с алмазами
 
-2. **Meditation Activity**
+2. **Медитация**
+   - Управляемые дыхательные упражнения
+   - Настраиваемые таймеры вдоха и выдоха
+   - Награды за завершённые сессии
 
-   - Guided breathing exercises
-   - Customizable inhale and exhale timers
-   - Rewards for completing sessions
+3. **Управление перерывами**
+   - Таймер перерывов
+   - Рекомендации активностей во время перерывов
+   - Награды за регулярные перерывы
 
-3. **Break Management**
+4. **Система достижений**
+   - Различные достижения для разблокировки
+   - Отслеживание прогресса по каждому достижению
 
-   - Timed break sessions
-   - Activity suggestions during breaks
-   - Rewards for taking regular breaks
+5. **Профиль пользователя**
+   - Персонализированный аватар
+   - Коллекция значков
+   - Статистика активности
 
-4. **Achievement System**
+6. **Панель статистики**
+   - Обзор недельного прогресса
+   - Месячные сравнения
+   - Топ достижений
 
-   - Various achievements to unlock
-   - Progress tracking for each achievement
+## Технологический стек
 
-5. **User Profile**
+**Frontend:**
+- Next.js 14.0.0
+- React 18.3.1
+- Tailwind CSS 3.4.6 + DaisyUI 2.43.0
+- Framer Motion 11.3.31 (анимации)
+- Chart.js 4.4.3 / Recharts 2.12.7 (графики)
+- Canvas Confetti 1.9.3 (эффекты)
+- Lucide React 0.417.0 (иконки)
 
-   - Personalized avatar
-   - Badge collection
-   - Activity statistics
+**Backend (готов к интеграции):**
+- Node.js 18+
+- Next.js API Routes + Express 4.19.2
+- PostgreSQL (@vercel/postgres 0.8.0 + pg 8.12.0)
+- JWT (jsonwebtoken 9.0.2)
+- WebSocket (ws 8.18.0)
 
-6. **Stats Dashboard**
-   - Weekly progress overview
-   - Monthly comparisons
-   - Top achievements showcase
+**Интеграции (roadmap):**
+- MAX Bridge API (биометрия, secure storage, haptic)
+- BCI Support (Ethers.js 5.4, Siberium Network)
 
-## Technology Stack
+---
 
-- Next.js
-- React
-- Tailwind CSS
-- Framer Motion
-- Chart.js
-- Canvas Confetti
+## 📋 Требования
 
-## Getting Started
+Перед запуском убедитесь, что у вас установлены:
 
-To run this project locally:
+- **Node.js** версии 18.x или выше
+- **npm** версии 9.x или выше (или **yarn**//**pnpm**)
+- **Docker** и **Docker Compose** (опционально, для контейнеризации)
+- **Git** для клонирования репозитория
 
-1. Clone the repository
-2. Install dependencies:
-   ```
-   npm install
-   ```
-3. Run the development server:
-   ```
-   npm run dev
-   ```
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+---
 
-## Project Structure
+## 🚀 Инструкция по запуску локально
 
-The main components of the project are:
+### Вариант 1: Локальный запуск без Docker
 
-- `components/hero.js`: Main work gamification interface
-- `components/MeditationActivity.js`: Meditation session component
-- `components/TakeBreakActivity.js`: Break management component
-- `components/tasks.js`: Task definitions and logic
-- `components/achievements.js`: Achievement definitions
-- `pages/stats.js`: Statistics dashboard
-- `components/Profile.js`: User profile component
+#### Шаг 1: Клонирование репозитория
 
-## Customization
+```bash
+git clone https://github.com/your-username/neiryhackathon.git
+cd neiryhackathon
+```
 
-The app's appearance can be customized by modifying the Tailwind configuration file:
+#### Шаг 2: Установка зависимостей
 
-javascript:tailwind.config.js
-startLine: 1
-endLine: 68
+```bash
+npm install
+```
 
-## Contributing
+Или с использованием yarn:
 
-This project was developed during a hackathon, but contributions for improvement are welcome. Please feel free to submit issues or pull requests.
+```bash
+yarn install
+```
 
-## License
+#### Шаг 3: Настройка переменных окружения
+
+Создайте файл `.env.local` в корневой директории проекта:
+
+```bash
+touch .env.local
+```
+
+Добавьте необходимые переменные окружения (пример):
+
+```env
+# Database (если используется)
+POSTGRES_URL=your_postgres_connection_string
+POSTGRES_PRISMA_URL=your_postgres_prisma_url
+POSTGRES_URL_NON_POOLING=your_postgres_non_pooling_url
+
+# NextAuth (если используется аутентификация)
+NEXTAUTH_SECRET=your_nextauth_secret
+NEXTAUTH_URL=http://localhost:3000
+
+# Telegram Bot (если используется)
+TELEGRAM_BOT_TOKEN=your_telegram_bot_token
+
+# Другие переменные
+NODE_ENV=development
+```
+
+#### Шаг 4: Запуск в режиме разработки
+
+```bash
+npm run dev
+```
+
+Приложение будет доступно по адресу: [http://localhost:3000](http://localhost:3000)
+
+#### Шаг 5: Сборка для продакшена
+
+```bash
+npm run build
+```
+
+#### Шаг 6: Запуск production-сборки
+
+```bash
+npm start
+```
+
+Production-версия будет доступна по адресу: [http://localhost:3000](http://localhost:3000)
+
+---
+
+### Вариант 2: Запуск с использованием Docker
+
+#### Шаг 1: Создание Dockerfile
+
+Создайте файл `Dockerfile` в корневой директории проекта:
+
+```dockerfile
+# Используем официальный образ Node.js 18 на базе Alpine Linux
+FROM node:18-alpine AS base
+
+# Установка зависимостей только когда это необходимо
+FROM base AS deps
+# Добавляем libc6-compat для совместимости с некоторыми пакетами
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+# Копируем файлы зависимостей
+COPY package.json package-lock.json* ./
+RUN npm ci
+
+# Сборка приложения
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Отключаем телеметрию Next.js
+ENV NEXT_TELEMETRY_DISABLED 1
+
+# Сборка Next.js приложения
+RUN npm run build
+
+# Production образ
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
+
+# Создаём пользователя для запуска приложения (не root)
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Копируем необходимые файлы из builder
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
+EXPOSE 3000
+
+ENV PORT 3000
+ENV HOSTNAME "0.0.0.0"
+
+# Запуск приложения
+CMD ["node", "server.js"]
+```
+
+**Примечание:** Для работы standalone-режима необходимо добавить в `next.config.js`:
+
+```javascript
+module.exports = {
+  output: 'standalone',
+  // ... остальная конфигурация
+}
+```
+
+#### Шаг 2: Создание .dockerignore
+
+Создайте файл `.dockerignore`:
+
+```
+node_modules
+.next
+.git
+.gitignore
+README.md
+.env*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+*.pem
+```
+
+#### Шаг 3: Сборка Docker-образа
+
+```bash
+docker build -t neiry-gamification-app .
+```
+
+Или с указанием тега версии:
+
+```bash
+docker build -t neiry-gamification-app:v1.0.0 .
+```
+
+#### Шаг 4: Запуск Docker-контейнера
+
+Базовый запуск:
+
+```bash
+docker run -p 3000:3000 neiry-gamification-app
+```
+
+Запуск с переменными окружения:
+
+```bash
+docker run -p 3000:3000 \
+  -e POSTGRES_URL=your_postgres_url \
+  -e NEXTAUTH_SECRET=your_secret \
+  -e NEXTAUTH_URL=http://localhost:3000 \
+  neiry-gamification-app
+```
+
+Запуск с файлом переменных окружения:
+
+```bash
+docker run -p 3000:3000 --env-file .env.local neiry-gamification-app
+```
+
+Запуск в фоновом режиме (detached):
+
+```bash
+docker run -d -p 3000:3000 --name neiry-app neiry-gamification-app
+```
+
+Просмотр логов контейнера:
+
+```bash
+docker logs neiry-app
+```
+
+Остановка контейнера:
+
+```bash
+docker stop neiry-app
+```
+
+Удаление контейнера:
+
+```bash
+docker rm neiry-app
+```
+
+---
+
+### Вариант 3: Запуск с Docker Compose
+
+#### Шаг 1: Создание docker-compose.yml
+
+Создайте файл `docker-compose.yml` в корневой директории:
+
+```yaml
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: neiry-gamification-app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - POSTGRES_URL=${POSTGRES_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=http://localhost:3000
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+    env_file:
+      - .env.local
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # Опционально: PostgreSQL база данных
+  postgres:
+    image: postgres:15-alpine
+    container_name: neiry-postgres
+    environment:
+      POSTGRES_USER: neiryuser
+      POSTGRES_PASSWORD: neirypassword
+      POSTGRES_DB: neirydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+```
+
+#### Шаг 2: Запуск с Docker Compose
+
+Сборка и запуск всех сервисов:
+
+```bash
+docker-compose up --build
+```
+
+Запуск в фоновом режиме:
+
+```bash
+docker-compose up -d
+```
+
+Просмотр логов:
+
+```bash
+docker-compose logs -f
+```
+
+Просмотр логов конкретного сервиса:
+
+```bash
+docker-compose logs -f app
+```
+
+Остановка всех сервисов:
+
+```bash
+docker-compose down
+```
+
+Остановка с удалением volumes:
+
+```bash
+docker-compose down -v
+```
+
+Перезапуск конкретного сервиса:
+
+```bash
+docker-compose restart app
+```
+
+---
+
+## 📝 Примеры запуска через командную строку
+
+### Разработка
+
+```bash
+# Установка зависимостей
+npm install
+
+# Запуск dev-сервера
+npm run dev
+
+# Запуск с другим портом
+PORT=3001 npm run dev
+
+# Запуск с debug-режимом
+NODE_OPTIONS='--inspect' npm run dev
+```
+
+### Production
+
+```bash
+# Сборка проекта
+npm run build
+
+# Запуск production-сервера
+npm start
+
+# Запуск на другом порту
+PORT=8080 npm start
+```
+
+### Линтинг
+
+```bash
+# Проверка кода
+npm run lint
+
+# Автоматическое исправление ошибок
+npm run lint -- --fix
+```
+
+### Docker команды
+
+```bash
+# Сборка образа
+docker build -t neiry-app:latest .
+
+# Запуск контейнера
+docker run -p 3000:3000 --name neiry neiry-app:latest
+
+# Запуск с volume для hot-reload в разработке
+docker run -p 3000:3000 \
+  -v $(pwd):/app \
+  -v /app/node_modules \
+  neiry-app:latest
+
+# Просмотр запущенных контейнеров
+docker ps
+
+# Остановка всех контейнеров
+docker stop $(docker ps -q)
+
+# Удаление неиспользуемых образов
+docker image prune -a
+```
+
+### Docker Compose команды
+
+```bash
+# Запуск с пересборкой
+docker-compose up --build --force-recreate
+
+# Масштабирование сервисов (если поддерживается)
+docker-compose up --scale app=3
+
+# Выполнение команды в контейнере
+docker-compose exec app npm run lint
+
+# Просмотр статуса сервисов
+docker-compose ps
+
+# Просмотр использования ресурсов
+docker-compose stats
+```
+
+---
+
+## 🗂️ Структура проекта
+
+```
+neiryhackathon/
+├── components/
+│   ├── hero.js                    # Основной интерфейс геймификации
+│   ├── MeditationActivity.js      # Компонент медитации
+│   ├── TakeBreakActivity.js       # Управление перерывами
+│   ├── WorkSessionActivity.js     # Рабочие сессии
+│   ├── tasks.js                   # Определение задач
+│   ├── achievements.js            # Определение достижений
+│   └── Profile.js                 # Профиль пользователя
+├── pages/
+│   ├── _app.js                    # Конфигурация приложения
+│   ├── index.js                   # Главная страница
+│   ├── stats.js                   # Панель статистики
+│   └── api/                       # API маршруты
+├── styles/
+│   └── globals.css                # Глобальные стили
+├── public/                        # Статические файлы
+├── contract-config.js             # Конфигурация контрактов
+├── next.config.js                 # Конфигурация Next.js
+├── tailwind.config.js             # Конфигурация Tailwind
+├── package.json                   # Зависимости проекта
+└── README.md                      # Документация
+```
+
+---
+
+## 🔧 Настройка и кастомизация
+
+### Изменение темы приложения
+
+Настройки темы находятся в файле `tailwind.config.js`. Вы можете изменить цвета, шрифты и другие параметры:
+
+```javascript
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        primary: '#your-color',
+        secondary: '#your-color',
+      },
+    },
+  },
+}
+```
+
+### Настройка задач и достижений
+
+Задачи определены в файле `components/tasks.js`, достижения в `components/achievements.js`. Вы можете добавлять новые или изменять существующие.
+
+---
+
+## 🐛 Решение проблем
+
+### Ошибка при установке зависимостей
+
+```bash
+# Очистка кэша npm
+npm cache clean --force
+
+# Удаление node_modules и повторная установка
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### Порт уже занят
+
+```bash
+# Найти процесс на порту 3000
+lsof -ti:3000
+
+# Убить процесс
+kill -9 $(lsof -ti:3000)
+
+# Или запустить на другом порту
+PORT=3001 npm run dev
+```
+
+### Проблемы с Docker
+
+```bash
+# Очистка Docker системы
+docker system prune -a
+
+# Пересборка без кэша
+docker build --no-cache -t neiry-app .
+
+# Просмотр логов контейнера
+docker logs <container-id>
+```
+
+---
+
+## 📚 Дополнительные ресурсы
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [React Documentation](https://react.dev)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [Docker Documentation](https://docs.docker.com)
+
+---
+
+## 🤝 Участие в разработке
+
+Проект был разработан в рамках хакатона, но мы приветствуем вклад в его улучшение. Пожалуйста, создавайте issues или pull requests.
+
+### Процесс контрибуции:
+
+1. Fork репозитория
+2. Создайте feature-ветку (`git checkout -b feature/AmazingFeature`)
+3. Commit изменений (`git commit -m 'Add some AmazingFeature'`)
+4. Push в ветку (`git push origin feature/AmazingFeature`)
+5. Откройте Pull Request
+
+---
+
+## 📄 Лицензия
 
 MIT
 
-## Acknowledgements
+---
 
-Special thanks to Neiry for the opportunity to develop this gamification app during the hackathon, and to all team members who contributed to its creation.
+## 🙏 Благодарности
+
+Особая благодарность компании Neiry за возможность разработать это приложение в рамках хакатона, а также всем участникам команды, внёсшим вклад в создание проекта.
+
+---
+
+## 📧 Контакты
+
+Если у вас есть вопросы или предложения, создайте issue в репозитории проекта.
