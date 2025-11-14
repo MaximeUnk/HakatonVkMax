@@ -76,442 +76,105 @@
 
 ---
 
-## 🚀 Инструкция по запуску локально
+# 🐳 Запуск приложения в Docker
 
-### Вариант 1: Локальный запуск без Docker
+## Быстрый старт
 
-#### Шаг 1: Клонирование репозитория
-
+### 1. Убедитесь, что Docker запущен
 ```bash
-git clone https://github.com/your-username/neiryhackathon.git
-cd neiryhackathon
+docker --version
 ```
 
-#### Шаг 2: Установка зависимостей
+Если Docker не установлен, скачайте его с [docker.com](https://www.docker.com/products/docker-desktop)
 
+### 2. Соберите Docker образ
 ```bash
-npm install
+docker compose build
 ```
 
-Или с использованием yarn:
-
+### 3. Запустите контейнер
 ```bash
-yarn install
+docker compose up -d
 ```
 
-#### Шаг 3: Настройка переменных окружения
+Приложение будет доступно по адресу: **http://localhost:3000**
 
-Создайте файл `.env.local` в корневой директории проекта:
+## Управление контейнером
 
+### Просмотр запущенных контейнеров
 ```bash
-touch .env.local
-```
-
-Добавьте необходимые переменные окружения (пример):
-
-```env
-# Database (если используется)
-POSTGRES_URL=your_postgres_connection_string
-POSTGRES_PRISMA_URL=your_postgres_prisma_url
-POSTGRES_URL_NON_POOLING=your_postgres_non_pooling_url
-
-# NextAuth (если используется аутентификация)
-NEXTAUTH_SECRET=your_nextauth_secret
-NEXTAUTH_URL=http://localhost:3000
-
-# Telegram Bot (если используется)
-TELEGRAM_BOT_TOKEN=your_telegram_bot_token
-
-# Другие переменные
-NODE_ENV=development
-```
-
-#### Шаг 4: Запуск в режиме разработки
-
-```bash
-npm run dev
-```
-
-Приложение будет доступно по адресу: [http://localhost:3000](http://localhost:3000)
-
-#### Шаг 5: Сборка для продакшена
-
-```bash
-npm run build
-```
-
-#### Шаг 6: Запуск production-сборки
-
-```bash
-npm start
-```
-
-Production-версия будет доступна по адресу: [http://localhost:3000](http://localhost:3000)
-
----
-
-### Вариант 2: Запуск с использованием Docker
-
-#### Шаг 1: Создание Dockerfile
-
-Создайте файл `Dockerfile` в корневой директории проекта:
-
-```dockerfile
-# Используем официальный образ Node.js 18 на базе Alpine Linux
-FROM node:18-alpine AS base
-
-# Установка зависимостей только когда это необходимо
-FROM base AS deps
-# Добавляем libc6-compat для совместимости с некоторыми пакетами
-RUN apk add --no-cache libc6-compat
-WORKDIR /app
-
-# Копируем файлы зависимостей
-COPY package.json package-lock.json* ./
-RUN npm ci
-
-# Сборка приложения
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-
-# Отключаем телеметрию Next.js
-ENV NEXT_TELEMETRY_DISABLED 1
-
-# Сборка Next.js приложения
-RUN npm run build
-
-# Production образ
-FROM base AS runner
-WORKDIR /app
-
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
-
-# Создаём пользователя для запуска приложения (не root)
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-# Копируем необходимые файлы из builder
-COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-USER nextjs
-
-EXPOSE 3000
-
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
-
-# Запуск приложения
-CMD ["node", "server.js"]
-```
-
-**Примечание:** Для работы standalone-режима необходимо добавить в `next.config.js`:
-
-```javascript
-module.exports = {
-  output: 'standalone',
-  // ... остальная конфигурация
-}
-```
-
-#### Шаг 2: Создание .dockerignore
-
-Создайте файл `.dockerignore`:
-
-```
-node_modules
-.next
-.git
-.gitignore
-README.md
-.env*.local
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.DS_Store
-*.pem
-```
-
-#### Шаг 3: Сборка Docker-образа
-
-```bash
-docker build -t neiry-gamification-app .
-```
-
-Или с указанием тега версии:
-
-```bash
-docker build -t neiry-gamification-app:v1.0.0 .
-```
-
-#### Шаг 4: Запуск Docker-контейнера
-
-Базовый запуск:
-
-```bash
-docker run -p 3000:3000 neiry-gamification-app
-```
-
-Запуск с переменными окружения:
-
-```bash
-docker run -p 3000:3000 \
-  -e POSTGRES_URL=your_postgres_url \
-  -e NEXTAUTH_SECRET=your_secret \
-  -e NEXTAUTH_URL=http://localhost:3000 \
-  neiry-gamification-app
-```
-
-Запуск с файлом переменных окружения:
-
-```bash
-docker run -p 3000:3000 --env-file .env.local neiry-gamification-app
-```
-
-Запуск в фоновом режиме (detached):
-
-```bash
-docker run -d -p 3000:3000 --name neiry-app neiry-gamification-app
-```
-
-Просмотр логов контейнера:
-
-```bash
-docker logs neiry-app
-```
-
-Остановка контейнера:
-
-```bash
-docker stop neiry-app
-```
-
-Удаление контейнера:
-
-```bash
-docker rm neiry-app
-```
-
----
-
-### Вариант 3: Запуск с Docker Compose
-
-#### Шаг 1: Создание docker-compose.yml
-
-Создайте файл `docker-compose.yml` в корневой директории:
-
-```yaml
-version: '3.8'
-
-services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: neiry-gamification-app
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=production
-      - POSTGRES_URL=${POSTGRES_URL}
-      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-      - NEXTAUTH_URL=http://localhost:3000
-      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
-    env_file:
-      - .env.local
-    restart: unless-stopped
-    networks:
-      - app-network
-
-  # Опционально: PostgreSQL база данных
-  postgres:
-    image: postgres:15-alpine
-    container_name: neiry-postgres
-    environment:
-      POSTGRES_USER: neiryuser
-      POSTGRES_PASSWORD: neirypassword
-      POSTGRES_DB: neirydb
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    networks:
-      - app-network
-    restart: unless-stopped
-
-networks:
-  app-network:
-    driver: bridge
-
-volumes:
-  postgres-data:
-```
-
-#### Шаг 2: Запуск с Docker Compose
-
-Сборка и запуск всех сервисов:
-
-```bash
-docker-compose up --build
-```
-
-Запуск в фоновом режиме:
-
-```bash
-docker-compose up -d
-```
-
-Просмотр логов:
-
-```bash
-docker-compose logs -f
-```
-
-Просмотр логов конкретного сервиса:
-
-```bash
-docker-compose logs -f app
-```
-
-Остановка всех сервисов:
-
-```bash
-docker-compose down
-```
-
-Остановка с удалением volumes:
-
-```bash
-docker-compose down -v
-```
-
-Перезапуск конкретного сервиса:
-
-```bash
-docker-compose restart app
-```
-
----
-
-## 📝 Примеры запуска через командную строку
-
-### Разработка
-
-```bash
-# Установка зависимостей
-npm install
-
-# Запуск dev-сервера
-npm run dev
-
-# Запуск с другим портом
-PORT=3001 npm run dev
-
-# Запуск с debug-режимом
-NODE_OPTIONS='--inspect' npm run dev
-```
-
-### Production
-
-```bash
-# Сборка проекта
-npm run build
-
-# Запуск production-сервера
-npm start
-
-# Запуск на другом порту
-PORT=8080 npm start
-```
-
-### Линтинг
-
-```bash
-# Проверка кода
-npm run lint
-
-# Автоматическое исправление ошибок
-npm run lint -- --fix
-```
-
-### Docker команды
-
-```bash
-# Сборка образа
-docker build -t neiry-app:latest .
-
-# Запуск контейнера
-docker run -p 3000:3000 --name neiry neiry-app:latest
-
-# Запуск с volume для hot-reload в разработке
-docker run -p 3000:3000 \
-  -v $(pwd):/app \
-  -v /app/node_modules \
-  neiry-app:latest
-
-# Просмотр запущенных контейнеров
 docker ps
-
-# Остановка всех контейнеров
-docker stop $(docker ps -q)
-
-# Удаление неиспользуемых образов
-docker image prune -a
 ```
 
-### Docker Compose команды
-
+### Просмотр логов
 ```bash
-# Запуск с пересборкой
-docker-compose up --build --force-recreate
-
-# Масштабирование сервисов (если поддерживается)
-docker-compose up --scale app=3
-
-# Выполнение команды в контейнере
-docker-compose exec app npm run lint
-
-# Просмотр статуса сервисов
-docker-compose ps
-
-# Просмотр использования ресурсов
-docker-compose stats
+docker logs vk-max-productivity-app
 ```
 
----
-
-## 🗂️ Структура проекта
-
-```
-neiryhackathon/
-├── components/
-│   ├── hero.js                    # Основной интерфейс геймификации
-│   ├── MeditationActivity.js      # Компонент медитации
-│   ├── TakeBreakActivity.js       # Управление перерывами
-│   ├── WorkSessionActivity.js     # Рабочие сессии
-│   ├── tasks.js                   # Определение задач
-│   ├── achievements.js            # Определение достижений
-│   └── Profile.js                 # Профиль пользователя
-├── pages/
-│   ├── _app.js                    # Конфигурация приложения
-│   ├── index.js                   # Главная страница
-│   ├── stats.js                   # Панель статистики
-│   └── api/                       # API маршруты
-├── styles/
-│   └── globals.css                # Глобальные стили
-├── public/                        # Статические файлы
-├── contract-config.js             # Конфигурация контрактов
-├── next.config.js                 # Конфигурация Next.js
-├── tailwind.config.js             # Конфигурация Tailwind
-├── package.json                   # Зависимости проекта
-└── README.md                      # Документация
+Или с отслеживанием в реальном времени:
+```bash
+docker logs -f vk-max-productivity-app
 ```
 
----
+### Остановка контейнера
+```bash
+docker compose down
+```
+
+### Перезапуск контейнера
+```bash
+docker compose restart
+```
+
+### Пересборка после изменений в коде
+```bash
+docker compose down
+docker compose build
+docker compose up -d
+```
+
+Или одной командой:
+```bash
+docker compose up -d --build
+```
+
+## Решение проблем
+
+### Порт уже занят
+Если порт 3000 уже занят, измените его в `docker-compose.yml`:
+```yaml
+ports:
+  - "3001:3000"  # Замените 3001 на любой свободный порт
+```
+
+### Очистка неиспользуемых образов
+```bash
+docker system prune -a
+```
+
+### Полная пересборка (без кеша)
+```bash
+docker compose build --no-cache
+```
+
+## Требования
+
+- Docker Desktop (macOS/Windows) или Docker Engine (Linux)
+- Минимум 2GB свободного места на диске
+- Node.js образ загрузится автоматически при первой сборке
+
+## Структура файлов
+
+- `Dockerfile` - инструкции для сборки образа
+- `docker-compose.yml` - конфигурация для запуска контейнера
+- `.dockerignore` - файлы, которые не попадут в образ
+
+## Примечания
+
+- Переменные окружения не требуются для запуска
+- Приложение работает в production режиме
+- Все зависимости устанавливаются автоматически при сборке
+
 
 ## 🔧 Настройка и кастомизация
 
